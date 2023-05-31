@@ -4,7 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from pydantic import BaseModel
 
+
 app = FastAPI()
+
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -14,6 +16,7 @@ origins = [
     "http://localhost:3000"
 ]
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -21,6 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 recipes = {
     "results": [{
@@ -46,6 +50,7 @@ recipes = {
     }]
 }
 
+
 class recipe(BaseModel):
     id: int | None = None
     icon: str | None = None
@@ -53,9 +58,11 @@ class recipe(BaseModel):
     description: str | None = None
     instructions: str | None = None
 
+
 @app.get("/")
 def index():
     return recipes
+
 
 @app.get("/get-by-id/{id}")
 def get_recipe(id: Optional[int] = None):
@@ -64,14 +71,17 @@ def get_recipe(id: Optional[int] = None):
             return recipe
     return {"Data": "Not found"}
 
+
 @app.get("/get-size")
 def get_size():
     return len(recipes["results"])
+
 
 @app.post("/add-recipe")
 def create_recipe(recipe: recipe):
     recipes["results"].append(jsonable_encoder(recipe))
     return recipes["results"][len(recipes["results"]) - 1]
+
 
 @app.put("/update-recipe/{id}", response_model=recipe)
 def update_recipe(id: int, recipe: recipe):
@@ -95,8 +105,8 @@ def update_recipe(id: int, recipe: recipe):
         tempRecipe["instructions"] = recipe["instructions"]
 
     recipes["results"][id] = tempRecipe
-    
     return tempRecipe
+
 
 @app.delete("/delete-recipe/{id}")
 def delete_recipe(id: int):
@@ -107,5 +117,5 @@ def delete_recipe(id: int):
     if len(recipes) > 1:
         for i in range(len(recipes) + 1):
             recipes["results"][i]["id"] = i
-    
     return {"Data": "Deleted"}
+
