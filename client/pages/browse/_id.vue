@@ -38,7 +38,7 @@
             }
         },
         async fetch () {
-            this.recipeInfo = await this.$axios.get('http://127.0.0.1:8000/get-by-name/' + this.$route.params.name)
+            this.recipeInfo = await this.$axios.get('http://127.0.0.1:8000/get-by-id/' + this.$route.params.id)
                 .then(res => res.data);
         }
     }

@@ -85,11 +85,6 @@ export default {
           title: "Browse",
           to: "/browse",
         },
-        {
-          icon: "mdi-plus",
-          title: "Add",
-          to: "/add",
-        },
       ],
       title: "MealStation",
       titleIcon: "mdi-food-off",

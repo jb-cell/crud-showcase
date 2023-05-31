@@ -22,19 +22,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-recipies = {
+recipes = {
     "results": [{
         "id": 0,           
         "icon": "mdi-food-drumstick",
         "name": "Chicken Tenders",
-        "description": "A very subtle recipie!",
+        "description": "A very subtle recipe!",
         "instructions": "Get chicken!"
     },
     {
         "id": 1,  
         "icon": "mdi-food-apple",
         "name": "Apple Pie",
-        "description": "Quick and delicious recipie for the family!",
+        "description": "Quick and delicious recipe for the family!",
         "instructions": "Get apples!"
     },
     {
@@ -46,7 +46,7 @@ recipies = {
     }]
 }
 
-class Recipie(BaseModel):
+class recipe(BaseModel):
     id: int | None = None
     icon: str | None = None
     name: str | None = None
@@ -55,64 +55,57 @@ class Recipie(BaseModel):
 
 @app.get("/")
 def index():
-    return recipies
-
-@app.get("/get-by-name/{name}")
-def get_recipie(name: Optional[str] = None):
-    for recipie in recipies["results"]:
-        if recipie["name"] == name:
-            return recipie
-    return {"Data": "Not found"}
+    return recipes
 
 @app.get("/get-by-id/{id}")
-def get_recipie(id: Optional[int] = None):
-    for recipie in recipies["results"]:
-        if recipie["id"] == id:
-            return recipie
+def get_recipe(id: Optional[int] = None):
+    for recipe in recipes["results"]:
+        if recipe["id"] == id:
+            return recipe
     return {"Data": "Not found"}
 
 @app.get("/get-size")
 def get_size():
-    return len(recipies["results"])
+    return len(recipes["results"])
 
-@app.post("/add-recipie")
-def create_recipe(recipie: Recipie):
-    recipies["results"].append(jsonable_encoder(recipie))
-    return recipies["results"][len(recipies["results"]) - 1]
+@app.post("/add-recipe")
+def create_recipe(recipe: recipe):
+    recipes["results"].append(jsonable_encoder(recipe))
+    return recipes["results"][len(recipes["results"]) - 1]
 
-@app.put("/update-recipie/{id}", response_model=Recipie)
-def update_recipie(id: int, recipie: Recipie):
+@app.put("/update-recipe/{id}", response_model=recipe)
+def update_recipe(id: int, recipe: recipe):
     
-    tempRecipie = {}
-    recipie = jsonable_encoder(recipie)
-    for currRecipie in recipies["results"]:
-        if currRecipie["id"] == id:
-            tempRecipie = currRecipie
+    tempRecipe = {}
+    recipe = jsonable_encoder(recipe)
+    for currRecipe in recipes["results"]:
+        if currRecipe["id"] == id:
+            tempRecipe = currRecipe
     
-    if recipie["icon"] != None:
-        tempRecipie["icon"] = recipie["icon"]
+    if recipe["icon"] != None:
+        tempRecipe["icon"] = recipe["icon"]
 
-    if recipie["name"] != None:
-        tempRecipie["name"] = recipie["name"]
+    if recipe["name"] != None:
+        tempRecipe["name"] = recipe["name"]
 
-    if recipie["description"] != None:
-        tempRecipie["description"] = recipie["description"]
+    if recipe["description"] != None:
+        tempRecipe["description"] = recipe["description"]
 
-    if recipie["instructions"] != None:
-        tempRecipie["instructions"] = recipie["instructions"]
+    if recipe["instructions"] != None:
+        tempRecipe["instructions"] = recipe["instructions"]
 
-    recipies["results"][id] = tempRecipie
+    recipes["results"][id] = tempRecipe
     
-    return tempRecipie
+    return tempRecipe
 
-@app.delete("/delete-recipie/{name}")
-def delete_recipie(name: str):
-    for recipie in recipies["results"]:
-        if recipie["name"] == name:
-            recipies["results"].remove(recipie)
+@app.delete("/delete-recipe/{id}")
+def delete_recipe(id: int):
+    for recipe in recipes["results"]:
+        if recipe["id"] == id:
+            recipes["results"].remove(recipe)
     
-    if len(recipies) > 1:
-        for i in range(len(recipies) + 1):
-            recipies["results"][i]["id"] = i
+    if len(recipes) > 1:
+        for i in range(len(recipes) + 1):
+            recipes["results"][i]["id"] = i
     
     return {"Data": "Deleted"}
